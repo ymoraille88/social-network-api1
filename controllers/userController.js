@@ -27,7 +27,7 @@ module.exports = {
         .then(async (user) =>
           !user
             ? res.status(404).json({ message: 'No user with that ID' })
-            : res.json
+            : res.json({ user })
         )
         .catch((err) => {
           console.log(err);
@@ -40,9 +40,23 @@ module.exports = {
         .then((user) => res.json(user))
         .catch((err) => res.status(500).json(err));
     },
-    // Delete a user
+    // Update a user
+    updateUser(req, res) {
+      User.findOneAndUpdate({ _id: req.params.userId })
+        .then((user) =>
+          !user
+            ? res.status(404).json({ message: 'No such user exists' })
+            : res.status(200).json(user)
+              )
+              .catch((err) => {
+                res.status(500).json(err);
+                console.log(err);
+              });
+          },
+    
+        // Delete a user
     deleteUser(req, res) {
-      User.findOneAndRemove({ _id: req.params.userId })
+      User.findOneAndDelete({ _id: req.params.userId })
         .then((user) =>
           !user
             ? res.status(404).json({ message: 'No such user exists' })
@@ -85,7 +99,7 @@ module.exports = {
     },
     // Remove friend 
     removeFriend(req, res) {
-      user.findOneAndUpdate(
+      User.findOneAndUpdate(
         { _id: req.params.userId },
         { $pull: { friend: { friendId: req.params.friendId } } },
         { runValidators: true, new: true }
