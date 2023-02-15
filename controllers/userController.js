@@ -12,8 +12,10 @@ module.exports = {
       })
       .select("__v")
       .sort({ _id: -1 })
-        .then
-          return res.json(userObj)
+        .then ((users) =>
+        res.json({ users })
+        )
+    
         
         .catch((err) => {
           console.log(err);
@@ -24,7 +26,7 @@ module.exports = {
     getSingleUser(req, res) {
      User.findOne({ _id: req.params.userId })
         .select('-__v')
-        .then(async (user) =>
+        .then((user) =>
           !user
             ? res.status(404).json({ message: 'No user with that ID' })
             : res.json({ user })
@@ -81,7 +83,7 @@ module.exports = {
   
     // Add friend 
     addFriend(req, res) {
-      console.log('You are adding an friend');
+      console.log('You are adding a friend');
       console.log(req.body);
       user.findOneAndUpdate(
         { _id: req.params.userId },
